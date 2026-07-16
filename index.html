@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Mejoras · Planilla Madre — Documentación de Flota</title>
+<title>Mejoras · Sistema de Documentación de Flota</title>
 <style>
   :root{
     --bg:#0f1420; --bg-soft:#151c2c; --card:#1a2334; --card-2:#202b40;
@@ -28,13 +28,13 @@
     font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
     -webkit-font-smoothing:antialiased}
   a{color:var(--brand)}
-  .wrap{max-width:960px;margin:0 auto;padding:0 20px}
+  .wrap{max-width:980px;margin:0 auto;padding:0 20px}
 
   header.hero{padding:64px 0 40px;border-bottom:1px solid var(--line);
     background:radial-gradient(1200px 400px at 80% -10%,var(--brand-soft),transparent 60%)}
   .eyebrow{color:var(--brand);font-weight:700;letter-spacing:.14em;text-transform:uppercase;font-size:12.5px}
   h1{font-size:clamp(28px,5vw,44px);line-height:1.12;margin:.35em 0 .3em;letter-spacing:-.02em}
-  .lede{color:var(--muted);font-size:clamp(16px,2.2vw,19px);max-width:64ch;margin:0}
+  .lede{color:var(--muted);font-size:clamp(16px,2.2vw,19px);max-width:66ch;margin:0}
   .meta{margin-top:22px;display:flex;flex-wrap:wrap;gap:10px}
   .chip{background:var(--card);border:1px solid var(--line);border-radius:999px;
     padding:6px 13px;font-size:13px;color:var(--muted)}
@@ -43,13 +43,23 @@
   section{padding:44px 0;border-bottom:1px solid var(--line)}
   h2{font-size:clamp(21px,3.2vw,27px);margin:0 0 6px;letter-spacing:-.01em}
   h2 .num{color:var(--faint);font-variant-numeric:tabular-nums;margin-right:10px;font-weight:600}
-  .section-sub{color:var(--muted);margin:0 0 22px;max-width:70ch}
+  .section-sub{color:var(--muted);margin:0 0 22px;max-width:74ch}
 
   .grid{display:grid;gap:16px}
-  .stats{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+  .stats{grid-template-columns:repeat(auto-fit,minmax(140px,1fr))}
   .stat{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px 18px;box-shadow:var(--shadow)}
   .stat .big{font-size:30px;font-weight:750;letter-spacing:-.02em;line-height:1}
   .stat .lbl{color:var(--muted);font-size:13.5px;margin-top:7px}
+
+  /* diagrama arquitectura */
+  .arch{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:14px;margin:6px 0 4px}
+  @media(max-width:640px){.arch{grid-template-columns:1fr;text-align:center}.arch .arrow{transform:rotate(90deg)}}
+  .node{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}
+  .node h4{margin:0 0 4px;font-size:16px}
+  .node small{color:var(--muted)}
+  .node.master{border-color:var(--brand)}
+  .arrow{color:var(--brand);font-weight:700;text-align:center}
+  .arrow small{display:block;color:var(--muted);font-weight:500;font-size:12px;max-width:130px}
 
   .cards{grid-template-columns:1fr}
   .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
@@ -68,13 +78,22 @@
   .tag.baja{background:var(--green-bg);color:var(--green)}
   .tag.hoja{background:var(--card-2);color:var(--muted);border:1px solid var(--line)}
   .card p{margin:12px 0 0;color:var(--muted)}
-  .card p.fix{color:var(--text)}
-  .card p.fix b{color:var(--green)}
   .card .now,.card .fix{background:var(--card-2);border:1px solid var(--line);border-radius:10px;
     padding:11px 13px;margin-top:12px;font-size:14.5px}
   .card .now b{color:var(--red)}
+  .card p.fix,.card .fix{color:var(--text)}
+  .card .fix b{color:var(--green)}
   code{background:var(--card-2);border:1px solid var(--line);border-radius:6px;
     padding:1px 6px;font:13.5px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--text)}
+
+  .tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+  table{border-collapse:collapse;width:100%;min-width:560px;font-size:14.5px;background:var(--card)}
+  th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--line)}
+  thead th{background:var(--card-2);font-size:12.5px;letter-spacing:.03em;text-transform:uppercase;color:var(--muted)}
+  tbody tr:last-child td{border-bottom:none}
+  td b{color:var(--text)}
+  .yes{color:var(--green);font-weight:700}
+  .extra{color:var(--brand);font-weight:600}
 
   ol.road{list-style:none;counter-reset:step;padding:0;margin:0;display:grid;gap:14px}
   ol.road li{counter-increment:step;background:var(--card);border:1px solid var(--line);
@@ -91,7 +110,7 @@
 
   footer{padding:34px 0 60px;color:var(--faint);font-size:13.5px}
   footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
-  .toc{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+  .toc{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
   .toc a{background:var(--card);border:1px solid var(--line);border-radius:999px;
     padding:5px 12px;font-size:13px;text-decoration:none;color:var(--muted)}
   .toc a:hover{border-color:var(--brand);color:var(--text)}
@@ -102,20 +121,24 @@
 <header class="hero">
   <div class="wrap">
     <div class="eyebrow">Revisión técnica · Propuesta de mejoras</div>
-    <h1>Planilla Madre — Documentación de Flota</h1>
-    <p class="lede">Análisis de la planilla de control documental de tractos y ramplas, con
-      hallazgos priorizados y una hoja de ruta para hacerla más confiable, rápida y fácil de mantener.</p>
+    <h1>Sistema de Documentación de Flota</h1>
+    <p class="lede">Revisión de los dos archivos que controlan los vencimientos documentales de la flota
+      —<b>Planilla Madre</b> y <b>Acreditación Equipos&nbsp;·&nbsp;Clientes</b>— con hallazgos priorizados
+      y una hoja de ruta para hacer el sistema más confiable, rápido y fácil de mantener.</p>
     <div class="meta">
-      <span class="chip">Archivo: <b>PLANILLA MADRE - DOCUMENTACION FLOTA.xlsx</b></span>
-      <span class="chip"><b>6</b> hojas</span>
+      <span class="chip"><b>2</b> archivos conectados</span>
+      <span class="chip">Plataforma real: <b>Google Sheets</b></span>
       <span class="chip"><b>46</b> tractos · <b>57</b> ramplas</span>
-      <span class="chip"><b>14</b> mejoras propuestas</span>
+      <span class="chip"><b>4</b> clientes: SQM · SITRANS · MELÓN · AZA</span>
+      <span class="chip"><b>18</b> mejoras propuestas</span>
     </div>
     <div class="toc">
       <a href="#resumen">Resumen</a>
+      <a href="#arquitectura">Cómo se conectan</a>
       <a href="#datos">Integridad de datos</a>
       <a href="#formulas">Fórmulas y lógica</a>
       <a href="#rendimiento">Rendimiento</a>
+      <a href="#clientes">Google Sheets &amp; Clientes</a>
       <a href="#usabilidad">Usabilidad</a>
       <a href="#ruta">Hoja de ruta</a>
     </div>
@@ -127,49 +150,92 @@
   <!-- RESUMEN -->
   <section id="resumen">
     <h2>Resumen ejecutivo</h2>
-    <p class="section-sub">La planilla cumple su objetivo: centraliza vencimientos de documentos por
-      patente y ya usa fórmulas, validaciones y formato condicional. Los problemas no son de concepto,
-      sino de <b>consistencia, mantenibilidad y escala</b>. Abajo, los hallazgos ordenados por impacto.</p>
+    <p class="section-sub">El sistema cumple su objetivo: centraliza los vencimientos por patente y genera vistas
+      por cliente automáticamente. El concepto es sólido; los problemas son de <b>consistencia entre archivos,
+      mantenibilidad y escala</b>. El punto más importante que surgió al revisar el segundo archivo: los dos
+      documentos <b>no se vinculan con Excel, sino que forman un sistema en Google Sheets</b> conectado por
+      <code>IMPORTRANGE</code>. Eso hace que varios problemas de "encabezados" pasen de molestos a críticos.</p>
     <div class="grid stats">
-      <div class="stat"><div class="big" style="color:var(--red)">3</div><div class="lbl">Prioridad alta</div></div>
-      <div class="stat"><div class="big" style="color:var(--amber)">7</div><div class="lbl">Prioridad media</div></div>
-      <div class="stat"><div class="big" style="color:var(--green)">4</div><div class="lbl">Prioridad baja / mejora</div></div>
-      <div class="stat"><div class="big">~2.450</div><div class="lbl">Filas vacías en RAMPLAS</div></div>
+      <div class="stat"><div class="big" style="color:var(--red)">4</div><div class="lbl">Prioridad alta</div></div>
+      <div class="stat"><div class="big" style="color:var(--amber)">8</div><div class="lbl">Prioridad media</div></div>
+      <div class="stat"><div class="big" style="color:var(--green)">6</div><div class="lbl">Prioridad baja / mejora</div></div>
+      <div class="stat"><div class="big">~5.000</div><div class="lbl">Filas vacías entre las 2 planillas</div></div>
+    </div>
+  </section>
+
+  <!-- ARQUITECTURA -->
+  <section id="arquitectura">
+    <h2><span class="num">◆</span>Cómo se conectan los dos archivos</h2>
+    <p class="section-sub">Ambos archivos son en realidad <b>Google Sheets</b> (las fórmulas usan
+      <code>IMPORTRANGE</code>, <code>FILTER</code>, <code>LET</code>, <code>MAP</code> y <code>LAMBDA</code>,
+      funciones exclusivas de Google). El <code>.xlsx</code> descargado es solo una <b>foto congelada</b> con
+      valores en caché.</p>
+    <div class="arch">
+      <div class="node master">
+        <h4>Planilla Madre</h4>
+        <small>Fuente de verdad. Hojas <code>TRACTOS</code> y <code>RAMPLAS</code> con las fechas
+          "REALIZADO" de cada documento por patente.</small>
+      </div>
+      <div class="arrow">→<small>IMPORTRANGE trae los datos en vivo</small></div>
+      <div class="node">
+        <h4>Acreditación · Clientes</h4>
+        <small>Una hoja por <b>cliente × tipo de equipo</b>. Recalcula vencimientos y estado según los
+          documentos que exige cada cliente.</small>
+      </div>
+    </div>
+    <p class="section-sub" style="margin-top:20px">Cada cliente valida un <b>conjunto distinto de documentos</b>.
+      Esta lógica de negocio hoy no está escrita en ninguna parte:</p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Documento</th><th>SQM</th><th>SITRANS</th><th>MELÓN</th><th>AZA</th></tr></thead>
+        <tbody>
+          <tr><td><b>Rev. Técnica</b></td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+          <tr><td><b>Permiso de Circulación</b></td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+          <tr><td><b>Seguro Obligatorio</b></td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+          <tr><td><b>Acreditación ASETRAN</b></td><td class="yes">✓</td><td>—</td><td>—</td><td>—</td></tr>
+          <tr><td><b>Cert. Mantención</b></td><td class="yes">✓</td><td>—</td><td>—</td><td class="yes">✓ (×2)</td></tr>
+          <tr><td><b>Emisión de Gases</b></td><td>—</td><td>—</td><td class="yes">✓</td><td>—</td></tr>
+          <tr><td><b>Seguro Resp. Civil</b></td><td>—</td><td>—</td><td class="yes">✓</td><td>—</td></tr>
+          <tr><td><span class="extra">Padrón</span></td><td>—</td><td class="yes">✓</td><td>—</td><td>—</td></tr>
+          <tr><td><span class="extra">RTI · Registro Nacional</span></td><td>—</td><td>—</td><td class="yes">✓</td><td>—</td></tr>
+        </tbody>
+      </table>
     </div>
   </section>
 
   <!-- DATOS -->
   <section id="datos">
     <h2><span class="num">A</span>Integridad y consistencia de datos</h2>
-    <p class="section-sub">Lo más urgente: datos que se contradicen entre sí o que rompen fórmulas que dependen de texto exacto.</p>
+    <p class="section-sub">Lo más urgente: datos que se contradicen o que rompen fórmulas que dependen de texto exacto —ahora también entre archivos.</p>
     <div class="grid cards">
 
       <article class="card sev-alta">
         <div class="card-head">
           <span class="card-id">01</span>
-          <h3>Valores de ESTADO inconsistentes y lista de validación con espacio</h3>
-          <span class="tag alta">Alta</span><span class="tag hoja">REQUERIMIENTOS · Hoja 5</span>
+          <h3>Encabezados con espacios y nombres distintos — rompen la conexión entre archivos</h3>
+          <span class="tag alta">Alta</span><span class="tag hoja">Ambos archivos</span>
         </div>
-        <div class="now">Hoy conviven <code>APROBADO</code>, <code>APROBADO&nbsp;</code> (con espacio),
-          <code>APROBADO, EN VALIDACION SQM</code> y <code>APROBADO , EN VALIDACION SQM</code>.
-          La propia lista desplegable define <b><code>"APROBADO "</code> con espacio final</b>, así que ni el valor "correcto" coincide.</div>
-        <p class="fix"><b>Solución.</b> Normalizar la lista sin espacios; separar el <i>estado</i> del documento
-          (POR SUBIR / EN VALIDACIÓN / APROBADO) del <i>cliente</i> en dos columnas distintas, para no mezclar
-          ambas cosas en una celda. Así se puede filtrar y contar de forma fiable.</p>
+        <div class="now">Las hojas de cliente localizan cada dato con
+          <code>MATCH("REALIZADO REV TECNICA", …)</code> sobre la Planilla Madre, <b>por el texto exacto del
+          encabezado</b>. Pero hay <code>"ACREDITACION ASETRAN "</code> con espacio final y
+          <code>MANTENCION</code> vs <code>MANTENIMIENTO</code> según la hoja. <b>Un solo carácter distinto
+          rompe en silencio TODAS las acreditaciones de clientes.</b></div>
+        <div class="fix"><b>Solución.</b> Unificar los nombres de encabezado exactos en toda la Planilla Madre
+          (sin espacios, misma palabra siempre) y tratarlos como un <b>"contrato" estable</b> que las hojas de
+          cliente consumen. Es el arreglo de mayor impacto y menor esfuerzo.</div>
       </article>
 
       <article class="card sev-alta">
         <div class="card-head">
           <span class="card-id">02</span>
-          <h3>Encabezados con espacios y nombres distintos que rompen los XLOOKUP</h3>
-          <span class="tag alta">Alta</span><span class="tag hoja">TRACTOS · RAMPLAS · CORREOS</span>
+          <h3>Valores de ESTADO inconsistentes y lista de validación con espacio</h3>
+          <span class="tag alta">Alta</span><span class="tag hoja">REQUERIMIENTOS · Hoja 5</span>
         </div>
-        <div class="now">Las hojas de correo buscan columnas <b>por el texto del encabezado</b>
-          (<code>MATCH("VENCIMIENTO...", fila 4)</code>). Pero hay <code>"ACREDITACION ASETRAN "</code>
-          con espacio final y <code>MANTENCION</code> vs <code>MANTENIMIENTO</code> según la hoja. Cualquier
-          diferencia de texto devuelve error silencioso.</div>
-        <p class="fix"><b>Solución.</b> Unificar los nombres de encabezado exactos entre hojas (sin espacios,
-          misma palabra) y, mejor aún, apoyarse en <b>Tablas de Excel con nombres de columna</b> en vez de coincidencia por texto.</p>
+        <div class="now">Conviven <code>APROBADO</code>, <code>APROBADO&nbsp;</code> (con espacio),
+          <code>APROBADO, EN VALIDACION SQM</code> y <code>APROBADO , EN VALIDACION SQM</code>.
+          La propia lista desplegable define <b><code>"APROBADO "</code> con espacio final</b>: ni el valor "correcto" coincide.</div>
+        <div class="fix"><b>Solución.</b> Normalizar la lista sin espacios y separar el <i>estado</i>
+          (POR SUBIR / EN VALIDACIÓN / APROBADO) del <i>cliente</i> en dos columnas, para poder filtrar y contar de forma fiable.</div>
       </article>
 
       <article class="card sev-media">
@@ -179,9 +245,9 @@
           <span class="tag media">Media</span><span class="tag hoja">Hoja 5</span>
         </div>
         <div class="now">Hoja 5 tiene la misma estructura que REQUERIMIENTOS (fecha, patente, documento, cliente, estado)
-          pero <b>sin fila de encabezados</b> y con nombre genérico. El historial queda partido en dos lugares.</div>
-        <p class="fix"><b>Solución.</b> Consolidar todo en una sola hoja <code>REGISTRO</code> (o tabla) con encabezados,
-          y renombrar las hojas con nombres claros. Un único historial evita duplicados y facilita reportes.</p>
+          pero <b>sin fila de encabezados</b> y con nombre genérico. El historial queda partido en dos.</div>
+        <div class="fix"><b>Solución.</b> Consolidar todo en una sola hoja <code>REGISTRO</code> con encabezados
+          y renombrar las hojas con nombres claros. Un único historial evita duplicados y facilita reportes.</div>
       </article>
 
     </div>
@@ -190,55 +256,56 @@
   <!-- FORMULAS -->
   <section id="formulas">
     <h2><span class="num">B</span>Fórmulas y lógica de vencimientos</h2>
-    <p class="section-sub">Funcionan, pero mezclan reglas y son difíciles de auditar o cambiar sin tocar celda por celda.</p>
+    <p class="section-sub">Funcionan, pero repiten reglas en varios lugares y son difíciles de auditar o cambiar.</p>
     <div class="grid cards">
 
-      <article class="card sev-media">
+      <article class="card sev-alta">
         <div class="card-head">
           <span class="card-id">04</span>
-          <h3>Períodos de vencimiento «quemados» en cada fórmula</h3>
-          <span class="tag media">Media</span><span class="tag hoja">TRACTOS · RAMPLAS</span>
+          <h3>Las reglas de vencimiento están triplicadas</h3>
+          <span class="tag alta">Alta</span><span class="tag hoja">Madre · Correos · Clientes</span>
         </div>
-        <div class="now">Cada documento tiene su período fijo dentro de la fórmula:
-          Rev. Técnica <code>+6 meses</code>, Seguro Obligatorio <code>+1 año</code>, etc.
-          Si un plazo cambia (p. ej. rev. técnica anual para vehículos nuevos), hay que reescribir 100+ celdas.</div>
-        <p class="fix"><b>Solución.</b> Crear una pequeña <b>tabla de configuración</b> (documento → meses de vigencia)
-          y que las fórmulas lean el plazo desde ahí. Un solo lugar para ajustar reglas.</p>
+        <div class="now">El período de cada documento (Rev. Técnica <code>+6 meses</code>, Seguro
+          <code>+1 año</code>, etc.) está "quemado" dentro de las fórmulas y <b>repetido en TRES lugares</b>:
+          la Planilla Madre, las hojas de CORREO y las hojas de cliente. Si un plazo cambia, hay que reescribirlo
+          en los tres —con alto riesgo de que queden desalineados.</div>
+        <div class="fix"><b>Solución.</b> Una única <b>tabla de configuración</b> (documento → meses de vigencia)
+          en la Planilla Madre, que todas las hojas lean. Un solo lugar para ajustar reglas.</div>
       </article>
 
       <article class="card sev-media">
         <div class="card-head">
           <span class="card-id">05</span>
-          <h3>Dos formas distintas de calcular el ESTADO</h3>
-          <span class="tag media">Media</span><span class="tag hoja">Madre vs. Correos</span>
+          <h3>El ESTADO se recalcula en cada archivo con lógicas distintas</h3>
+          <span class="tag media">Media</span><span class="tag hoja">Madre · Correos · Clientes</span>
         </div>
-        <div class="now">Las hojas madre calculan estado sobre los <b>días restantes</b>
-          (<code>MIN(días) ≤ 0 → VENCIDO, ≤ 30 → POR VENCER</code>), y las hojas de correo lo recalculan sobre
-          <b>fechas</b> (<code>MIN(fecha) ≤ HOY</code>). Dos lógicas para lo mismo pueden divergir.</div>
-        <p class="fix"><b>Solución.</b> Definir el estado <b>una sola vez</b> en la hoja madre y que las demás lo
-          lean, en lugar de recalcularlo. Una única fuente de verdad.</p>
+        <div class="now">Las hojas madre calculan estado por <b>días restantes</b>
+          (<code>MIN(días) ≤ 0 → VENCIDO</code>), y las de correo lo recalculan por <b>fechas</b>
+          (<code>MIN(fecha) ≤ HOY</code>). Dos formas de hacer lo mismo que pueden divergir.</div>
+        <div class="fix"><b>Solución.</b> Definir el estado <b>una sola vez</b> y que las demás hojas lo lean, en lugar de recalcularlo. Una única fuente de verdad.</div>
       </article>
 
-      <article class="card sev-baja">
+      <article class="card sev-media">
         <div class="card-head">
           <span class="card-id">06</span>
-          <h3>Búsquedas sobre columnas completas y por texto de encabezado</h3>
-          <span class="tag baja">Baja</span><span class="tag hoja">CORREOS</span>
+          <h3><code>IMPORTRANGE</code> repetido en cada columna</h3>
+          <span class="tag media">Media</span><span class="tag hoja">Acreditación · Clientes</span>
         </div>
-        <div class="now">Los <code>XLOOKUP</code> recorren <code>$A:$ZZ</code> con <code>INDEX/MATCH</code> sobre toda
-          la fila de encabezados. Es más lento y frágil de lo necesario.</div>
-        <p class="fix"><b>Solución.</b> Referenciar rangos acotados o columnas de Tabla con nombre. Más rápido y a prueba de errores de texto.</p>
+        <div class="now">Cada documento lanza su propio <code>IMPORTRANGE(…"TRACTOS!A:Z")</code>: son 5–7
+          importaciones idénticas por hoja × 6 hojas, trayendo el mismo rango una y otra vez. Es lento y choca
+          con los límites de <code>IMPORTRANGE</code> de Google Sheets.</div>
+        <div class="fix"><b>Solución.</b> <b>Un solo</b> <code>IMPORTRANGE</code> por hoja hacia un área auxiliar,
+          y que el resto de columnas lo referencien localmente. Menos llamadas, mucho más rápido.</div>
       </article>
 
       <article class="card sev-baja">
         <div class="card-head">
           <span class="card-id">07</span>
           <h3><code>TODAY()</code> guardado en A1 como celda de datos</h3>
-          <span class="tag baja">Baja</span><span class="tag hoja">TRACTOS · RAMPLAS</span>
+          <span class="tag baja">Baja</span><span class="tag hoja">Todas las hojas</span>
         </div>
         <div class="now">La fecha de hoy vive en <code>A1</code>, mezclada con la zona de encabezados, y se referencia como <code>$A$1</code>.</div>
-        <p class="fix"><b>Solución.</b> Usar <code>TODAY()</code> directamente en las fórmulas de días, o reservarle
-          una celda claramente etiquetada fuera del área de títulos.</p>
+        <div class="fix"><b>Solución.</b> Usar <code>TODAY()</code> directamente, o reservarle una celda claramente etiquetada fuera del área de títulos.</div>
       </article>
 
     </div>
@@ -247,43 +314,87 @@
   <!-- RENDIMIENTO -->
   <section id="rendimiento">
     <h2><span class="num">C</span>Rendimiento y mantenimiento</h2>
-    <p class="section-sub">Lo que hoy hace el archivo lento y trabajoso de mantener al día.</p>
+    <p class="section-sub">Lo que hoy hace el sistema lento y trabajoso de mantener al día.</p>
     <div class="grid cards">
 
       <article class="card sev-media">
         <div class="card-head">
           <span class="card-id">08</span>
-          <h3>RAMPLAS tiene ~2.500 filas y solo 57 con datos</h3>
-          <span class="tag media">Media</span><span class="tag hoja">RAMPLAS</span>
+          <h3>Miles de filas vacías (RAMPLAS y SITRANS RAMPLA)</h3>
+          <span class="tag media">Media</span><span class="tag hoja">Ambos archivos</span>
         </div>
-        <div class="now">La hoja llega hasta la fila <b>2507</b> con solo <b>57</b> patentes reales. Eso infla el
-          tamaño del archivo (≈186 KB) y hace que recalcule fórmulas sobre miles de filas vacías.</div>
-        <p class="fix"><b>Solución.</b> Convertir el rango a una <b>Tabla de Excel</b> que crece sola al agregar
-          filas. Se elimina el arrastre manual de fórmulas y el peso muerto.</p>
+        <div class="now">RAMPLAS llega a la fila <b>2507</b> con 57 datos reales, y SITRANS RAMPLA a la
+          <b>2505</b> con 55. En total ~5.000 filas vacías con fórmulas que recalculan sin necesidad.</div>
+        <div class="fix"><b>Solución.</b> Acotar los rangos a las filas reales (o usar Tablas / rangos con nombre que crezcan solos). Menos peso y cálculo.</div>
       </article>
 
       <article class="card sev-media">
         <div class="card-head">
           <span class="card-id">09</span>
-          <h3>Listas de patentes duplicadas y a mano en las hojas de correo</h3>
-          <span class="tag media">Media</span><span class="tag hoja">CORREOS</span>
+          <h3>Listas de patentes duplicadas y a mano</h3>
+          <span class="tag media">Media</span><span class="tag hoja">Correos · Clientes</span>
         </div>
-        <div class="now">Las hojas de correo repiten la lista de patentes escrita manualmente. Si agregas o das de
-          baja un equipo en TRACTOS/RAMPLAS, hay que acordarse de actualizar también estas hojas.</div>
-        <p class="fix"><b>Solución.</b> Generar la lista de patentes automáticamente desde la hoja madre
-          (referencia directa o Tabla) para que se sincronice sola.</p>
+        <div class="now">Las hojas de correo y de cliente repiten la lista de patentes escrita manualmente.
+          Al dar de alta o baja un equipo hay que actualizar cada hoja por separado.</div>
+        <div class="fix"><b>Solución.</b> Generar la lista de patentes automáticamente desde la Planilla Madre para que se sincronice sola.</div>
       </article>
 
       <article class="card sev-baja">
         <div class="card-head">
           <span class="card-id">10</span>
-          <h3>Columnas «DIAS», «DIAS 2»… poco descriptivas</h3>
-          <span class="tag baja">Baja</span><span class="tag hoja">TRACTOS · RAMPLAS</span>
+          <h3>Columnas «DIAS», «VENCIMIENTO 2»… poco descriptivas</h3>
+          <span class="tag baja">Baja</span><span class="tag hoja">Todas las hojas</span>
         </div>
-        <div class="now">Las columnas de días restantes se llaman <code>DIAS</code>, <code>DIAS 2</code> … <code>DIAS 7</code>,
-          sin decir a qué documento pertenecen.</div>
-        <p class="fix"><b>Solución.</b> Nombrarlas por documento: <code>DÍAS REV. TÉCNICA</code>,
-          <code>DÍAS SEGURO OBLIG.</code>, etc. Más legible al leer y al construir fórmulas.</p>
+        <div class="now">Las columnas se llaman <code>DIAS</code>, <code>DIAS 2</code>…,
+          <code>VENCIMIENTO 2</code>… sin indicar a qué documento pertenecen.</div>
+        <div class="fix"><b>Solución.</b> Nombrarlas por documento: <code>DÍAS REV. TÉCNICA</code>,
+          <code>VENC. SEGURO OBLIG.</code>, etc. Más legible al leer y al escribir fórmulas.</div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- CLIENTES / GOOGLE SHEETS -->
+  <section id="clientes">
+    <h2><span class="num">D</span>Sistema Google Sheets &amp; requisitos por cliente</h2>
+    <p class="section-sub">Hallazgos propios de que todo vive en Google Sheets y se comparte por cliente.</p>
+    <div class="grid cards">
+
+      <article class="card sev-alta">
+        <div class="card-head">
+          <span class="card-id">11</span>
+          <h3>Mezcla Excel / Google Sheets: editar el <code>.xlsx</code> rompe todo</h3>
+          <span class="tag alta">Alta</span><span class="tag hoja">Estrategia</span>
+        </div>
+        <div class="now">Los archivos usan funciones que <b>solo existen en Google Sheets</b>
+          (<code>IMPORTRANGE</code>, <code>FILTER</code>, <code>MAP</code>, <code>LAMBDA</code>). El
+          <code>.xlsx</code> descargado muestra valores congelados; si alguien lo <b>abre y edita en Excel</b>,
+          esas fórmulas se pierden y las vistas de cliente dejan de actualizarse.</div>
+        <div class="fix"><b>Solución.</b> Decidir explícitamente <b>vivir en Google Sheets</b> (recomendado, ya
+          están ahí): trabajar siempre en línea y usar los <code>.xlsx</code> solo como respaldo/lectura, nunca para editar.</div>
+      </article>
+
+      <article class="card sev-media">
+        <div class="card-head">
+          <span class="card-id">12</span>
+          <h3>Los requisitos por cliente no están documentados</h3>
+          <span class="tag media">Media</span><span class="tag hoja">Acreditación · Clientes</span>
+        </div>
+        <div class="now">Cada cliente exige un set distinto de documentos (ver la matriz de arriba), pero esa
+          regla vive solo implícita en las columnas de cada hoja. Si SQM o MELÓN cambian sus exigencias, no hay un lugar claro donde reflejarlo.</div>
+        <div class="fix"><b>Solución.</b> Una <b>matriz cliente × documento</b> como tabla de configuración, que
+          alimente qué columnas muestra cada hoja. Documenta la regla y facilita cambios.</div>
+      </article>
+
+      <article class="card sev-baja">
+        <div class="card-head">
+          <span class="card-id">13</span>
+          <h3>AZA: dos columnas «Certificado Mantención» sin distinguir</h3>
+          <span class="tag baja">Baja</span><span class="tag hoja">AZA TRACTO</span>
+        </div>
+        <div class="now">La hoja de AZA tiene <code>CERTIFICADO MANTENCION</code> y
+          <code>CERTIFICADO MANTENCION 2</code>, sin nombre que indique en qué se diferencian.</div>
+        <div class="fix"><b>Solución.</b> Renombrarlas con su significado real (p. ej. tracto vs. semirremolque, o dos periodicidades) o eliminar la duplicada si sobra.</div>
       </article>
 
     </div>
@@ -291,54 +402,63 @@
 
   <!-- USABILIDAD -->
   <section id="usabilidad">
-    <h2><span class="num">D</span>Usabilidad, control y escala</h2>
-    <p class="section-sub">Mejoras que aumentan la utilidad diaria y preparan la planilla para crecer.</p>
+    <h2><span class="num">E</span>Usabilidad, control y escala</h2>
+    <p class="section-sub">Mejoras que aumentan la utilidad diaria y preparan el sistema para crecer.</p>
     <div class="grid cards">
 
       <article class="card sev-baja">
         <div class="card-head">
-          <span class="card-id">11</span>
+          <span class="card-id">14</span>
           <h3>Falta formato condicional en el registro</h3>
           <span class="tag baja">Baja</span><span class="tag hoja">REQUERIMIENTOS · Hoja 5</span>
         </div>
-        <div class="now">Las hojas madre sí colorean vencidos/por vencer, pero el registro de requerimientos no
-          resalta el estado (POR SUBIR / EN VALIDACIÓN / APROBADO).</div>
-        <p class="fix"><b>Solución.</b> Formato condicional por estado (rojo/ámbar/verde) para leer el avance de un vistazo.</p>
+        <div class="now">Las hojas madre sí colorean vencidos/por vencer, pero el registro de requerimientos no resalta el estado (POR SUBIR / EN VALIDACIÓN / APROBADO).</div>
+        <div class="fix"><b>Solución.</b> Formato condicional por estado (rojo/ámbar/verde) para leer el avance de un vistazo.</div>
       </article>
 
       <article class="card sev-baja">
         <div class="card-head">
-          <span class="card-id">12</span>
+          <span class="card-id">15</span>
           <h3>Sin panel resumen (dashboard)</h3>
           <span class="tag baja">Baja</span><span class="tag hoja">Nueva hoja</span>
         </div>
-        <div class="now">No hay una vista rápida de «cuántos documentos están vencidos o por vencer», ni por cliente (SQM, MELÓN, SITRANS).</div>
-        <p class="fix"><b>Solución.</b> Una hoja <code>RESUMEN</code> con contadores (vencidos, por vencer a 30 días,
-          por documento y por cliente) usando <code>COUNTIFS</code>. Ideal para decidir prioridades del día.</p>
+        <div class="now">No hay una vista rápida de «cuántos documentos están vencidos o por vencer», ni por cliente (SQM, MELÓN, SITRANS, AZA).</div>
+        <div class="fix"><b>Solución.</b> Una hoja <code>RESUMEN</code> con contadores (vencidos, por vencer a 30 días,
+          por documento y por cliente). Ideal para decidir las prioridades del día.</div>
       </article>
 
       <article class="card sev-baja">
         <div class="card-head">
-          <span class="card-id">13</span>
+          <span class="card-id">16</span>
           <h3>Sin validación del formato de patente</h3>
-          <span class="tag baja">Baja</span><span class="tag hoja">Todas</span>
+          <span class="tag baja">Baja</span><span class="tag hoja">Todas las hojas</span>
         </div>
         <div class="now">Las patentes se escriben libremente; un typo (<code>VYSP68</code> vs <code>VYSP-68</code>)
-          hace que los <code>XLOOKUP</code> no encuentren el equipo.</div>
-        <p class="fix"><b>Solución.</b> Validación de datos con patrón de patente y, donde aplique, lista desplegable
-          alimentada desde la hoja madre.</p>
+          hace que el <code>MATCH</code> / <code>IMPORTRANGE</code> no encuentre el equipo y quede sin datos.</div>
+        <div class="fix"><b>Solución.</b> Validación de datos con patrón de patente y, donde aplique, lista desplegable alimentada desde la Planilla Madre.</div>
       </article>
 
       <article class="card sev-baja">
         <div class="card-head">
-          <span class="card-id">14</span>
-          <h3>Un único archivo compartido — pensar la escala</h3>
+          <span class="card-id">17</span>
+          <h3>Búsquedas sobre columnas completas (<code>A:Z</code> / <code>$A:$ZZ</code>)</h3>
+          <span class="tag baja">Baja</span><span class="tag hoja">Correos · Clientes</span>
+        </div>
+        <div class="now">Los <code>XLOOKUP</code> / <code>IMPORTRANGE</code> recorren columnas completas con
+          <code>MATCH</code> sobre toda la fila de encabezados: más lento y frágil de lo necesario.</div>
+        <div class="fix"><b>Solución.</b> Acotar los rangos y apoyarse en rangos con nombre. Más rápido y a prueba de errores de texto.</div>
+      </article>
+
+      <article class="card sev-baja">
+        <div class="card-head">
+          <span class="card-id">18</span>
+          <h3>Alertas automáticas de vencimiento</h3>
           <span class="tag baja">Mejora</span><span class="tag hoja">Estrategia</span>
         </div>
-        <div class="now">Todo el control depende de un solo .xlsx. A medida que crece la flota y más personas lo editan,
-          aumentan los conflictos y el riesgo de sobrescribir.</div>
-        <p class="fix"><b>Solución.</b> Corto plazo: Tablas + hoja de configuración + resumen. Mediano plazo: evaluar
-          <b>Google Sheets / Excel en línea</b> (edición concurrente) o un <b>Power BI / app simple</b> con alertas automáticas de vencimiento.</p>
+        <div class="now">Hoy hay que abrir las planillas para ver qué está por vencer. Ya que todo vive en Google
+          Sheets, se puede automatizar el aviso.</div>
+        <div class="fix"><b>Solución.</b> Un <b>Google Apps Script</b> que revise diariamente y envíe correo con lo
+          vencido / por vencer a 30 días por cliente. Aprovecha las hojas de CORREO que ya existen.</div>
       </article>
 
     </div>
@@ -346,21 +466,21 @@
 
   <!-- RUTA -->
   <section id="ruta">
-    <h2><span class="num">E</span>Hoja de ruta sugerida</h2>
-    <p class="section-sub">De lo más rentable y rápido a lo estructural. Cada paso deja la planilla utilizable.</p>
+    <h2><span class="num">◆</span>Hoja de ruta sugerida</h2>
+    <p class="section-sub">De lo más rentable y rápido a lo estructural. Cada paso deja el sistema utilizable.</p>
     <ol class="road">
-      <li><b>Normalizar datos <span class="pill win">Rápido</span></b>
-        <span>Arreglar la lista de ESTADO (quitar espacio), unificar encabezados y limpiar valores mezclados. Hallazgos 01, 02.</span></li>
-      <li><b>Consolidar el historial <span class="pill win">Rápido</span></b>
-        <span>Fusionar «Hoja 5» con REQUERIMIENTOS y renombrar hojas con nombres claros. Hallazgo 03.</span></li>
-      <li><b>Convertir rangos en Tablas de Excel <span class="pill mid">Medio</span></b>
-        <span>Elimina filas vacías, sincroniza patentes y hace crecer las fórmulas solas. Hallazgos 06, 08, 09.</span></li>
-      <li><b>Centralizar reglas y estado <span class="pill mid">Medio</span></b>
-        <span>Tabla de configuración de plazos y un único cálculo de ESTADO reutilizado. Hallazgos 04, 05.</span></li>
-      <li><b>Panel resumen + formato condicional <span class="pill mid">Medio</span></b>
-        <span>Hoja RESUMEN con contadores por estado, documento y cliente. Hallazgos 11, 12, 13.</span></li>
-      <li><b>Evaluar la plataforma a futuro <span class="pill big">Estratégico</span></b>
-        <span>Edición concurrente y alertas automáticas si la flota sigue creciendo. Hallazgo 14.</span></li>
+      <li><b>Estabilizar los encabezados (el "contrato") <span class="pill win">Rápido · alto impacto</span></b>
+        <span>Unificar nombres sin espacios en la Planilla Madre para que no se rompan las acreditaciones de clientes. Hallazgo 01.</span></li>
+      <li><b>Normalizar datos y consolidar el historial <span class="pill win">Rápido</span></b>
+        <span>Arreglar la lista de ESTADO y fusionar «Hoja 5» con REQUERIMIENTOS. Hallazgos 02, 03.</span></li>
+      <li><b>Definir que la plataforma es Google Sheets <span class="pill mid">Medio</span></b>
+        <span>Trabajar en línea; los <code>.xlsx</code> solo como respaldo. Evita romper las fórmulas. Hallazgo 11.</span></li>
+      <li><b>Centralizar reglas: plazos, estado y requisitos por cliente <span class="pill mid">Medio</span></b>
+        <span>Tablas de configuración únicas que todas las hojas lean. Hallazgos 04, 05, 12.</span></li>
+      <li><b>Optimizar importaciones y rangos <span class="pill mid">Medio</span></b>
+        <span>Un solo <code>IMPORTRANGE</code> por hoja, acotar filas vacías y sincronizar patentes. Hallazgos 06, 08, 09, 17.</span></li>
+      <li><b>Panel resumen + alertas automáticas <span class="pill big">Alto valor</span></b>
+        <span>Hoja RESUMEN con contadores y un Apps Script que avise de vencimientos por cliente. Hallazgos 14, 15, 18.</span></li>
     </ol>
   </section>
 
@@ -368,7 +488,7 @@
 
 <footer>
   <div class="wrap">
-    <span>Revisión de la Planilla Madre de Documentación de Flota · 14 mejoras propuestas.</span>
+    <span>Revisión del sistema de Documentación de Flota (Planilla Madre + Acreditación Clientes) · 18 mejoras propuestas.</span>
     <span id="fecha"></span>
   </div>
 </footer>
