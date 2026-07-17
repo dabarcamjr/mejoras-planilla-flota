@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mantención · Sistema Documental TZamora</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav class="top"><div class="wrap">
+  <a class="brand" href="index.html">Sistema Documental <span>· TZamora</span></a>
+  <a class="link" href="index.html">Inicio</a>
+  <a class="link" href="documentacion.html">Documentación</a>
+  <a class="link" href="operacion.html">Operación</a>
+  <a class="link active" href="mantencion.html">Mantención</a>
+  <a class="link" href="combustible.html">Combustible</a>
+  <a class="link" href="administracion.html">Administración</a>
+</div></nav>
+
+<header class="hero"><div class="wrap">
+  <div class="eyebrow">Área 3 de 5</div>
+  <h1>🔧 Mantención</h1>
+  <p class="lede">Control del estado mecánico de la flota: <b>mantenciones por kilometraje</b>, <b>órdenes de
+    trabajo</b> (activas e históricas) y el <b>control de neumáticos</b> por posición y DOT.</p>
+  <div class="meta">
+    <span class="chip"><b>3</b> planillas</span>
+    <span class="chip">Alerta por km faltante/pasado</span>
+    <span class="chip">OT con IMPORTRANGE externo</span>
+  </div>
+</div></header>
+
+<main class="wrap">
+
+  <section>
+    <h2>Cómo funciona</h2>
+    <p class="section-sub"><b>MANTENCIONES</b> compara el kilometraje actual con el de la próxima mantención y
+      marca lo faltante/pasado, con una hoja <code>REPORTE CORREO</code> para avisar. <b>ORDEN DE TRABAJO</b> lleva
+      la OT activa y un historial (<code>BD_HISTORIAL</code>) y trae datos de otra planilla por
+      <code>IMPORTRANGE</code>. <b>NEUMÁTICOS</b> registra cada neumático por patente, posición y código RFID/DOT.</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Planilla</th><th>Hojas</th><th>Observación</th></tr></thead>
+      <tbody>
+        <tr><td><b>MANTENCIONES TRACTOS TZAMORA</b></td><td>Mantenciones · Historial · Kilometrajes · Reporte correo</td><td>44 tractos activos</td></tr>
+        <tr><td><b>ORDEN DE TRABAJO - TZAMORA</b></td><td>OT_ACTIVA · BD_HISTORIAL · DATOS</td><td>historial ~297 / <b>3.118 filas</b></td></tr>
+        <tr><td><b>NEUMÁTICOS CONSOLIDADO</b></td><td>Códigos Tractos/Ramplas · Consolidado · DOT · Resumen</td><td>Códigos Tractos: <b>50.500 filas</b></td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section>
+    <h2>Hallazgos del área</h2>
+    <div class="grid cards">
+
+      <article class="card sev-critica">
+        <div class="card-head"><span class="card-id">M1</span>
+          <h3>NEUMÁTICOS: hoja de códigos con 50.500 filas</h3>
+          <span class="tag critica">Crítica</span><span class="tag hoja">CÓDIGOS TRACTOS</span></div>
+        <div class="now">La hoja <code>CODIGOS TRACTOS</code> se extiende a <b>50.500 filas</b> para un puñado de
+          patentes. Es un peso muerto enorme que ralentiza el archivo y arriesga los límites de Google Sheets.</div>
+        <div class="fix"><b>Solución.</b> Acotar a las filas reales y convertir a una tabla que crezca sola. Revisar también <code>CODIGOS RAMPLAS</code>.</div>
+      </article>
+
+      <article class="card sev-alta">
+        <div class="card-head"><span class="card-id">M2</span>
+          <h3>Orden de Trabajo: historial inflado y dependencia externa</h3>
+          <span class="tag alta">Alta</span><span class="tag hoja">ORDEN DE TRABAJO</span></div>
+        <div class="now"><code>OT_ACTIVA</code> llega a 1.005 filas y <code>BD_HISTORIAL</code> a 3.118, en su mayoría
+          vacías. Además trae datos de <b>otra planilla</b> por <code>IMPORTRANGE</code> (ID <code>1P2kJ…</code>), lo que suma otra dependencia frágil por encabezado.</div>
+        <div class="fix"><b>Solución.</b> Acotar rangos y documentar/estabilizar el vínculo <code>IMPORTRANGE</code> externo (encabezados fijos).</div>
+      </article>
+
+      <article class="card sev-alta">
+        <div class="card-head"><span class="card-id">M3</span>
+          <h3>Intervalos de mantención "quemados" en fórmulas</h3>
+          <span class="tag alta">Alta</span><span class="tag hoja">MANTENCIONES</span></div>
+        <div class="now">El cálculo de "próxima mantención" y "faltante/pasado" usa intervalos de kilometraje escritos
+          dentro de las fórmulas. Si cambia el plan de mantención (o difiere por modelo), hay que editar celda por celda.</div>
+        <div class="fix"><b>Solución.</b> Tabla de configuración <code>modelo → intervalo km</code> que la hoja lea; enlaza con la mejora global de centralizar reglas.</div>
+      </article>
+
+      <article class="card sev-media">
+        <div class="card-head"><span class="card-id">M4</span>
+          <h3>Columnas duplicadas y encabezados con «2»</h3>
+          <span class="tag media">Media</span><span class="tag hoja">Mantenciones · Historial</span></div>
+        <div class="now">El historial repite bloques <code>KMS MANTENCION</code> / <code>… 2</code> y mezcla
+          <code>Column 10/11/12/13</code> sin nombre. Cuesta saber qué representa cada columna.</div>
+        <div class="fix"><b>Solución.</b> Normalizar a un modelo "una fila por mantención" (formato largo) en vez de repetir columnas por evento.</div>
+      </article>
+
+      <article class="card sev-baja">
+        <div class="card-head"><span class="card-id">M5</span>
+          <h3>Reporte de correo desconectado de un envío automático</h3>
+          <span class="tag baja">Mejora</span><span class="tag hoja">REPORTE CORREO</span></div>
+        <div class="now">Existe una hoja <code>REPORTE CORREO</code> con lo faltante/pasado, pero el envío parece manual.</div>
+        <div class="fix"><b>Solución.</b> Apps Script que envíe ese reporte automáticamente (junto con las alertas de documentos y neumáticos).</div>
+      </article>
+
+    </div>
+    <a class="backlink" href="index.html">← Volver al inicio</a>
+  </section>
+
+</main>
+
+<footer><div class="wrap">
+  <span>Mantención · kilometrajes, órdenes de trabajo y neumáticos.</span>
+  <span id="fecha"></span>
+</div></footer>
+<script>document.getElementById('fecha').textContent='Actualizado: '+new Date().toLocaleDateString('es-CL',{year:'numeric',month:'long',day:'numeric'});</script>
+</body>
+</html>

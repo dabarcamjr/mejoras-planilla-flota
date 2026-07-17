@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Operación · Sistema Documental TZamora</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav class="top"><div class="wrap">
+  <a class="brand" href="index.html">Sistema Documental <span>· TZamora</span></a>
+  <a class="link" href="index.html">Inicio</a>
+  <a class="link" href="documentacion.html">Documentación</a>
+  <a class="link active" href="operacion.html">Operación</a>
+  <a class="link" href="mantencion.html">Mantención</a>
+  <a class="link" href="combustible.html">Combustible</a>
+  <a class="link" href="administracion.html">Administración</a>
+</div></nav>
+
+<header class="hero"><div class="wrap">
+  <div class="eyebrow">Área 2 de 5</div>
+  <h1>🚚 Operación</h1>
+  <p class="lede">El día a día de la flota: <b>checklists</b> de recepción/entrega de tractos y ramplas, el
+    <b>control de ingreso</b> de camiones y conductores, el registro de <b>taller</b>, y el repositorio de
+    <b>~3.197 PDFs</b> escaneados que respaldan cada checklist.</p>
+  <div class="meta">
+    <span class="chip"><b>4</b> planillas (Google Forms)</span>
+    <span class="chip"><b>~3.197</b> PDFs de evidencia</span>
+    <span class="chip">Consolidados con <b>QUERY</b> / <b>LAMBDA</b></span>
+  </div>
+</div></header>
+
+<main class="wrap">
+
+  <section>
+    <h2>Cómo funciona</h2>
+    <p class="section-sub">Los conductores llenan <b>Google Forms</b> (checklist de tracto/rampla, ingreso/salida).
+      Las respuestas caen en hojas <code>CONSOLIDADO</code>, y fórmulas avanzadas (<code>QUERY</code>,
+      <code>SORTN</code>, <code>LAMBDA</code>) calculan el <b>último movimiento por patente</b> y quién la tiene
+      asignada. Un <b>Apps Script</b> crea las carpetas de PDFs por patente donde se guarda la evidencia escaneada.</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Planilla</th><th>Hojas</th><th>Volumen</th></tr></thead>
+      <tbody>
+        <tr><td><b>CHECKLIST TRACTOS (Respuestas)</b></td><td>Consolidado · Resumen · Hoja 10</td><td>~1.055 respuestas</td></tr>
+        <tr><td><b>CHECKLIST RAMPLAS (Respuestas)</b></td><td>Consolidado · Resumen</td><td>~3.810 respuestas</td></tr>
+        <tr><td><b>Control de Ingreso Camiones y Conductores</b></td><td>Respuestas · TRACTOS · RAMPLAS</td><td>~8.598 datos / <b>58.438 filas</b></td></tr>
+        <tr><td><b>INGRESO Y SALIDA TALLER (Respuestas)</b></td><td>Respuestas · Resumen</td><td>~316 respuestas</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section>
+    <h2>Hallazgos del área</h2>
+    <div class="grid cards">
+
+      <article class="card sev-critica">
+        <div class="card-head"><span class="card-id">O1</span>
+          <h3>Control de Ingreso con 58.438 filas (bloat extremo)</h3>
+          <span class="tag critica">Crítica</span><span class="tag hoja">Control de Ingreso</span></div>
+        <div class="now">La hoja de respuestas llega a <b>58.438 filas</b> con ~8.598 con datos, y las vistas
+          <code>TRACTOS</code>/<code>RAMPLAS</code> corren <code>QUERY</code> sobre rangos gigantes. Es de las
+          cosas que más frena todo el archivo y consume la cuota de celdas de Google.</div>
+        <div class="fix"><b>Solución.</b> Acotar los <code>QUERY</code> a rangos reales (o dinámicos), archivar respuestas antiguas y limpiar filas vacías.</div>
+      </article>
+
+      <article class="card sev-alta">
+        <div class="card-head"><span class="card-id">O2</span>
+          <h3>Lógica crítica concentrada en fórmulas "mágicas"</h3>
+          <span class="tag alta">Alta</span><span class="tag hoja">Checklists · Control</span></div>
+        <div class="now">El cálculo de "último movimiento / conductor asignado" vive en una sola celda con
+          <code>QUERY</code>+<code>SORTN</code>+<code>LAMBDA</code>+<code>REGEXREPLACE</code> de decenas de líneas
+          (p. ej. «Hoja 10» y hoja TRACTOS). Si se rompe, es muy difícil de depurar y <b>nadie más sabría arreglarla</b>.</div>
+        <div class="fix"><b>Solución.</b> Documentar qué hace cada bloque, dividir en pasos intermedios visibles y dejar comentarios. Reduce el riesgo de "bus factor".</div>
+      </article>
+
+      <article class="card sev-media">
+        <div class="card-head"><span class="card-id">O3</span>
+          <h3>Columnas sin nombre: «Columna 1…12», «Column 15/16»</h3>
+          <span class="tag media">Media</span><span class="tag hoja">Taller · Checklists</span></div>
+        <div class="now">INGRESO Y SALIDA TALLER tiene sus columnas como <code>Columna 1..12</code>, y los consolidados
+          arrastran <code>Column 15/16</code>. Como los <code>QUERY</code> referencian por posición, esto es frágil y difícil de mantener.</div>
+        <div class="fix"><b>Solución.</b> Poner encabezados reales y referenciar por nombre de columna cuando se pueda.</div>
+      </article>
+
+      <article class="card sev-media">
+        <div class="card-head"><span class="card-id">O4</span>
+          <h3>La evidencia (PDFs) no está enlazada desde las planillas</h3>
+          <span class="tag media">Media</span><span class="tag hoja">Checklist ↔ Drive</span></div>
+        <div class="now">Hay ~3.197 PDFs escaneados organizados por patente, y una columna <code>CHECK CARPETA</code>,
+          pero la relación entre cada respuesta del checklist y su PDF depende de nombres de archivo escritos a mano
+          (con formatos muy variados: fechas, nombres, mayúsculas).</div>
+        <div class="fix"><b>Solución.</b> Que el Apps Script guarde el <b>enlace directo</b> al PDF en la fila del checklist, y estandarizar el nombre de archivo (<code>PATENTE_FECHA_TIPO</code>).</div>
+      </article>
+
+      <article class="card sev-baja">
+        <div class="card-head"><span class="card-id">O5</span>
+          <h3>Resúmenes duplicados y hojas «Hoja 7/10» sueltas</h3>
+          <span class="tag baja">Baja</span><span class="tag hoja">Checklists · Control</span></div>
+        <div class="now">Varias hojas <code>RESUMEN</code> y hojas con nombre genérico (<code>Hoja 7</code>, <code>Hoja 10</code>) hacen difícil saber cuál es la vista "oficial".</div>
+        <div class="fix"><b>Solución.</b> Renombrar por su función y marcar claramente la hoja de salida definitiva.</div>
+      </article>
+
+    </div>
+    <a class="backlink" href="index.html">← Volver al inicio</a>
+  </section>
+
+</main>
+
+<footer><div class="wrap">
+  <span>Operación · checklists, control de ingreso y evidencia de la flota.</span>
+  <span id="fecha"></span>
+</div></footer>
+<script>document.getElementById('fecha').textContent='Actualizado: '+new Date().toLocaleDateString('es-CL',{year:'numeric',month:'long',day:'numeric'});</script>
+</body>
+</html>

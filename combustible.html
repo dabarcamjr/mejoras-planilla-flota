@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Combustible · Sistema Documental TZamora</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav class="top"><div class="wrap">
+  <a class="brand" href="index.html">Sistema Documental <span>· TZamora</span></a>
+  <a class="link" href="index.html">Inicio</a>
+  <a class="link" href="documentacion.html">Documentación</a>
+  <a class="link" href="operacion.html">Operación</a>
+  <a class="link" href="mantencion.html">Mantención</a>
+  <a class="link active" href="combustible.html">Combustible</a>
+  <a class="link" href="administracion.html">Administración</a>
+</div></nav>
+
+<header class="hero"><div class="wrap">
+  <div class="eyebrow">Área 4 de 5</div>
+  <h1>⛽ Combustible</h1>
+  <p class="lede">Registro de <b>cargas de combustible</b> desde un formulario y su <b>cruce con RFID</b> para
+    validar que la carga corresponde al equipo correcto.</p>
+  <div class="meta">
+    <span class="chip"><b>2</b> planillas</span>
+    <span class="chip">~637 cargas registradas</span>
+    <span class="chip">Validación RFID</span>
+  </div>
+</div></header>
+
+<main class="wrap">
+
+  <section>
+    <h2>Cómo funciona</h2>
+    <p class="section-sub"><b>CARGA COMBUSTIBLE BASE HIJUELAS</b> recibe cada carga por Google Form (conductor,
+      tracto, kilometraje, litros, guía). <b>CRUCE RFID / COMBUSTIBLE</b> compara esos datos contra las lecturas
+      RFID de tracto y rampla para marcar si la carga <b>"se validó"</b>.</p>
+    <div class="arch">
+      <div class="node"><h4>Form de carga</h4><small>Conductor · Tracto · Km · Litros · Guía</small></div>
+      <div class="arrow">→<small>se cruza con lecturas RFID</small></div>
+      <div class="node"><h4>Cruce RFID</h4><small>¿La carga corresponde al equipo? ✔ / ✗</small></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Hallazgos del área</h2>
+    <div class="grid cards">
+
+      <article class="card sev-alta">
+        <div class="card-head"><span class="card-id">C1</span>
+          <h3>Datos de conductor/patente sin normalizar dificultan el cruce</h3>
+          <span class="tag alta">Alta</span><span class="tag hoja">Carga · Cruce</span></div>
+        <div class="now">El cruce RFID depende de que el <b>nombre del conductor y la patente</b> coincidan exactamente
+          entre el formulario de carga y la tabla de equipos RFID. Al escribirse libremente, las diferencias de
+          formato (espacios, guiones, mayúsculas) generan cargas que quedan sin validar.</div>
+        <div class="fix"><b>Solución.</b> Listas desplegables de conductor y patente en el formulario, alimentadas desde una fuente única, y normalización con <code>TRIM/UPPER</code> en el cruce.</div>
+      </article>
+
+      <article class="card sev-media">
+        <div class="card-head"><span class="card-id">C2</span>
+          <h3>Consumo (km/litro) no se aprovecha</h3>
+          <span class="tag media">Mejora</span><span class="tag hoja">Carga combustible</span></div>
+        <div class="now">Se registra kilometraje y litros, pero no hay un cálculo de <b>rendimiento por equipo/conductor</b> que permita detectar consumos anómalos o posibles fugas/robos.</div>
+        <div class="fix"><b>Solución.</b> Columna de rendimiento (km recorridos ÷ litros) y un resumen que resalte desviaciones respecto al promedio del equipo.</div>
+      </article>
+
+      <article class="card sev-baja">
+        <div class="card-head"><span class="card-id">C3</span>
+          <h3>Encabezados con nombre poco claro</h3>
+          <span class="tag baja">Baja</span><span class="tag hoja">Cruce</span></div>
+        <div class="now">La hoja de cruce tiene columnas como <code>Column 9</code> y <code>SE VALIDO?</code> con formato libre.</div>
+        <div class="fix"><b>Solución.</b> Encabezados claros y un estado de validación con lista controlada (VALIDADO / NO VALIDADO / REVISAR).</div>
+      </article>
+
+    </div>
+    <a class="backlink" href="index.html">← Volver al inicio</a>
+  </section>
+
+</main>
+
+<footer><div class="wrap">
+  <span>Combustible · cargas y validación con RFID.</span>
+  <span id="fecha"></span>
+</div></footer>
+<script>document.getElementById('fecha').textContent='Actualizado: '+new Date().toLocaleDateString('es-CL',{year:'numeric',month:'long',day:'numeric'});</script>
+</body>
+</html>

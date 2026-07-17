@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Documentación &amp; Acreditación · Sistema Documental TZamora</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav class="top"><div class="wrap">
+  <a class="brand" href="index.html">Sistema Documental <span>· TZamora</span></a>
+  <a class="link" href="index.html">Inicio</a>
+  <a class="link active" href="documentacion.html">Documentación</a>
+  <a class="link" href="operacion.html">Operación</a>
+  <a class="link" href="mantencion.html">Mantención</a>
+  <a class="link" href="combustible.html">Combustible</a>
+  <a class="link" href="administracion.html">Administración</a>
+</div></nav>
+
+<header class="hero"><div class="wrap">
+  <div class="eyebrow">Área 1 de 5 · El núcleo</div>
+  <h1>📋 Documentación &amp; Acreditación</h1>
+  <p class="lede">El corazón del sistema: dos <b>planillas madre</b> (equipos y personas) que registran los
+    vencimientos, y las <b>vistas por cliente</b> que se alimentan de ellas por <code>IMPORTRANGE</code> para
+    acreditar la flota ante SQM, SITRANS, MELÓN y AZA.</p>
+  <div class="meta">
+    <span class="chip"><b>5</b> planillas</span>
+    <span class="chip"><b>46</b> tractos · <b>57</b> ramplas · <b>~47</b> conductores</span>
+    <span class="chip"><b>4</b> clientes</span>
+  </div>
+</div></header>
+
+<main class="wrap">
+
+  <section>
+    <h2>Cómo funciona</h2>
+    <p class="section-sub">La <b>Planilla Madre Flota</b> guarda la fecha "REALIZADO" de cada documento por patente
+      y calcula vencimiento y días restantes. La <b>Planilla Madre Personas</b> hace lo mismo para conductores
+      (licencias, exámenes de salud ocupacional, cursos, gestión SSO). Las hojas de <b>acreditación</b> traen esos
+      datos en vivo con <code>IMPORTRANGE</code> y arman una vista por cliente, mostrando solo los documentos que
+      cada uno exige.</p>
+    <div class="arch">
+      <div class="node master"><h4>Planilla Madre Flota</h4><small>TRACTOS · RAMPLAS · REQUERIMIENTOS</small></div>
+      <div class="arrow">→<small>IMPORTRANGE + MATCH por encabezado</small></div>
+      <div class="node"><h4>Acreditación Equipos · Clientes</h4><small>SQM · SITRANS · MELÓN · AZA</small></div>
+    </div>
+    <div class="arch" style="margin-top:14px">
+      <div class="node master"><h4>Planilla Madre Personas</h4><small>RRHH · Salud ocupacional · SSO · Cursos</small></div>
+      <div class="arrow">→<small>IMPORTRANGE</small></div>
+      <div class="node"><h4>Acreditación Personas · Clientes</h4><small>SQM · MELÓN · SITRANS</small></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Matriz de requisitos por cliente — equipos</h2>
+    <p class="section-sub">Cada cliente valida un set distinto de documentos. Hoy esta regla no está escrita en ninguna parte; vive implícita en las columnas de cada hoja.</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Documento</th><th>SQM</th><th>SITRANS</th><th>MELÓN</th><th>AZA</th></tr></thead>
+      <tbody>
+        <tr><td><b>Rev. Técnica</b></td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+        <tr><td><b>Permiso de Circulación</b></td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+        <tr><td><b>Seguro Obligatorio</b></td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+        <tr><td><b>Acreditación ASETRAN</b></td><td class="yes">✓</td><td>—</td><td>—</td><td>—</td></tr>
+        <tr><td><b>Cert. Mantención</b></td><td class="yes">✓</td><td>—</td><td>—</td><td class="yes">✓ (×2)</td></tr>
+        <tr><td><b>Emisión de Gases</b></td><td>—</td><td>—</td><td class="yes">✓</td><td>—</td></tr>
+        <tr><td><b>Seguro Resp. Civil</b></td><td>—</td><td>—</td><td class="yes">✓</td><td>—</td></tr>
+        <tr><td><span class="extra">Padrón</span></td><td>—</td><td class="yes">✓</td><td>—</td><td>—</td></tr>
+        <tr><td><span class="extra">RTI · Registro Nacional</span></td><td>—</td><td>—</td><td class="yes">✓</td><td>—</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section>
+    <h2>Hallazgos del área</h2>
+    <div class="grid cards">
+
+      <article class="card sev-critica">
+        <div class="card-head"><span class="card-id">D1</span>
+          <h3>Encabezados frágiles que rompen las acreditaciones (equipos y personas)</h3>
+          <span class="tag critica">Crítica</span><span class="tag hoja">Ambas madres</span></div>
+        <div class="now">Las vistas de cliente usan <code>MATCH("REALIZADO REV TECNICA", …)</code> sobre la planilla
+          madre. Con <code>ACREDITACION ASETRAN&nbsp;</code> (espacio) y <code>MANTENCION</code> vs
+          <code>MANTENIMIENTO</code>, <b>un carácter rompe toda una columna de cliente sin avisar</b>. Con dos
+          planillas madre, el riesgo está duplicado.</div>
+        <div class="fix"><b>Solución.</b> Unificar y "congelar" los nombres de encabezado como una interfaz estable; idealmente usar rangos con nombre en lugar de coincidencia por texto.</div>
+      </article>
+
+      <article class="card sev-alta">
+        <div class="card-head"><span class="card-id">D2</span>
+          <h3>Reglas de vencimiento repetidas en 3 niveles</h3>
+          <span class="tag alta">Alta</span><span class="tag hoja">Madre · Correos · Clientes</span></div>
+        <div class="now">Los plazos (Rev. Técnica <code>+6m</code>, Seguro <code>+1a</code>, etc.) están escritos dentro
+          de las fórmulas y repetidos en la Planilla Madre, las hojas de CORREO y las de cliente. Cambiar un plazo obliga a editar los tres.</div>
+        <div class="fix"><b>Solución.</b> Una tabla de configuración <code>documento → meses de vigencia</code> que todas las hojas lean.</div>
+      </article>
+
+      <article class="card sev-alta">
+        <div class="card-head"><span class="card-id">D3</span>
+          <h3>Acreditación Personas es enorme y con bloat</h3>
+          <span class="tag alta">Alta</span><span class="tag hoja">ACREDITACIÓN PERSONAS</span></div>
+        <div class="now">La hoja de respaldo tiene <b>110 columnas y ~21.200 filas</b> para ~45 conductores. Es
+          lentísima y cara de recalcular, y mezcla respaldos con vistas activas.</div>
+        <div class="fix"><b>Solución.</b> Acotar a las filas reales, separar "respaldo" de "vista activa" y reducir columnas a las que cada cliente realmente exige.</div>
+      </article>
+
+      <article class="card sev-media">
+        <div class="card-head"><span class="card-id">D4</span>
+          <h3>REQUERIMIENTOS existe en 4 lugares</h3>
+          <span class="tag media">Media</span><span class="tag hoja">Flota · Personas · UNIDOS · Acredit.</span></div>
+        <div class="now">Hay hojas <code>REQUERIMIENTOS</code> en la Planilla Madre Flota, en Personas, una planilla
+          <code>REQUERIMIENTOS UNIDOS</code> y dentro de acreditaciones. El historial se dispersa y puede contradecirse.</div>
+        <div class="fix"><b>Solución.</b> Una única fuente de requerimientos que las demás vistas lean; <code>REQUERIMIENTOS UNIDOS</code> como consolidado de solo lectura.</div>
+      </article>
+
+      <article class="card sev-media">
+        <div class="card-head"><span class="card-id">D5</span>
+          <h3>Estados inconsistentes y «Hoja 5» sin encabezados</h3>
+          <span class="tag media">Media</span><span class="tag hoja">REQUERIMIENTOS</span></div>
+        <div class="now">Conviven <code>APROBADO</code>, <code>APROBADO&nbsp;</code> (espacio) y valores que mezclan
+          estado+cliente; la lista desplegable incluso define <code>"APROBADO "</code> con espacio. Y «Hoja 5» es un registro paralelo sin encabezados.</div>
+        <div class="fix"><b>Solución.</b> Normalizar la lista (sin espacios), separar estado y cliente en dos columnas, y fusionar «Hoja 5» con el registro principal.</div>
+      </article>
+
+      <article class="card sev-media">
+        <div class="card-head"><span class="card-id">D6</span>
+          <h3>Matriz de requisitos por cliente no documentada</h3>
+          <span class="tag media">Media</span><span class="tag hoja">Acreditaciones</span></div>
+        <div class="now">Qué documentos exige cada cliente (tabla de arriba) solo existe implícito en las columnas de cada hoja. Si un cliente cambia sus exigencias, no hay dónde reflejarlo con claridad.</div>
+        <div class="fix"><b>Solución.</b> Convertir la matriz cliente × documento en una tabla de configuración que alimente qué columnas muestra cada vista.</div>
+      </article>
+
+      <article class="card sev-baja">
+        <div class="card-head"><span class="card-id">D7</span>
+          <h3>Columnas «DIAS 2…», «VENCIMIENTO 3…» poco descriptivas</h3>
+          <span class="tag baja">Baja</span><span class="tag hoja">Madre · Clientes</span></div>
+        <div class="now">Las columnas no dicen a qué documento pertenecen; dificulta leer y escribir fórmulas.</div>
+        <div class="fix"><b>Solución.</b> Nombrarlas por documento (<code>DÍAS REV. TÉCNICA</code>, <code>VENC. SEGURO OBLIG.</code>).</div>
+      </article>
+
+    </div>
+    <a class="backlink" href="index.html">← Volver al inicio</a>
+  </section>
+
+</main>
+
+<footer><div class="wrap">
+  <span>Documentación &amp; Acreditación · núcleo del sistema documental de flota.</span>
+  <span id="fecha"></span>
+</div></footer>
+<script>document.getElementById('fecha').textContent='Actualizado: '+new Date().toLocaleDateString('es-CL',{year:'numeric',month:'long',day:'numeric'});</script>
+</body>
+</html>

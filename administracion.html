@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Administración · Sistema Documental TZamora</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav class="top"><div class="wrap">
+  <a class="brand" href="index.html">Sistema Documental <span>· TZamora</span></a>
+  <a class="link" href="index.html">Inicio</a>
+  <a class="link" href="documentacion.html">Documentación</a>
+  <a class="link" href="operacion.html">Operación</a>
+  <a class="link" href="mantencion.html">Mantención</a>
+  <a class="link" href="combustible.html">Combustible</a>
+  <a class="link active" href="administracion.html">Administración</a>
+</div></nav>
+
+<header class="hero"><div class="wrap">
+  <div class="eyebrow">Área 5 de 5</div>
+  <h1>🧾 Administración</h1>
+  <p class="lede">Soporte administrativo y financiero: <b>órdenes de compra y facturas</b>, <b>depósitos a
+    conductores</b>, el <b>Apps Script</b> que crea las carpetas de documentos, y una planilla de negocio
+    (agrocomercial) que en realidad no pertenece al sistema de flota.</p>
+  <div class="meta">
+    <span class="chip"><b>5</b> planillas</span>
+    <span class="chip">2 versiones del proceso de depósitos</span>
+    <span class="chip">1 planilla ajena al dominio</span>
+  </div>
+</div></header>
+
+<main class="wrap">
+
+  <section>
+    <h2>Qué hay en esta área</h2>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Planilla</th><th>Rol</th><th>Observación</th></tr></thead>
+      <tbody>
+        <tr><td><b>OC - FACT</b></td><td>Órdenes de compra y facturas (rechazadas, pendientes)</td><td>ok</td></tr>
+        <tr><td><b>SOLICITUD DEPOSITO 1</b></td><td>Depósitos/gastos a conductores + rutas y valores</td><td><span class="badge alta">duplicada</span></td></tr>
+        <tr><td><b>solicitud de sobre deposito</b></td><td>Variante del mismo proceso, con datos distintos</td><td><span class="badge alta">duplicada</span></td></tr>
+        <tr><td><b>SHEET SCRIPT CARPETAS AUTOMÁTICAS</b></td><td>Documenta dónde está el Apps Script de carpetas</td><td><span class="badge media">vacía</span></td></tr>
+        <tr><td><b>AGRO_COMERCIAL_PRO</b></td><td>Inventario / ventas / compras</td><td><span class="badge baja">otro negocio</span></td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section>
+    <h2>Hallazgos del área</h2>
+    <div class="grid cards">
+
+      <article class="card sev-critica">
+        <div class="card-head"><span class="card-id">A1</span>
+          <h3>Dos planillas de depósitos que divergen</h3>
+          <span class="tag critica">Crítica</span><span class="tag hoja">SOLICITUD DEPOSITO</span></div>
+        <div class="now">Coexisten <code>SOLICITUD DEPOSITO 1</code> (con hoja de 3.256 filas) y
+          <code>solicitud de sobre deposito</code> (~103 filas), ambas con estructura parecida
+          (<code>PENDIENTES</code>, <code>PLANTILLA PARA ENVIAR</code>, <code>RUTAS Y VALORES</code>,
+          <code>Info Conductores</code>) pero <b>datos y montos distintos</b>. No se sabe cuál es la vigente.</div>
+        <div class="fix"><b>Solución.</b> Definir una única planilla de depósitos como oficial, migrar lo que sirva de la otra y archivarla. El resto de hojas debe apuntar solo a la vigente.</div>
+      </article>
+
+      <article class="card sev-alta">
+        <div class="card-head"><span class="card-id">A2</span>
+          <h3>«Info Conductores» y «Rutas y Valores» repetidas en cada planilla</h3>
+          <span class="tag alta">Alta</span><span class="tag hoja">Depósitos</span></div>
+        <div class="now">Los datos de conductores y la tabla de rutas/valores están copiados dentro de ambas planillas
+          de depósito (y con bloat: <code>Info Conductores</code> a 1.000 filas). Mantenerlos sincronizados a mano es fuente de errores.</div>
+        <div class="fix"><b>Solución.</b> Una única tabla maestra de conductores y otra de rutas/valores, leídas por referencia desde donde se necesiten.</div>
+      </article>
+
+      <article class="card sev-media">
+        <div class="card-head"><span class="card-id">A3</span>
+          <h3>El Apps Script de carpetas no está documentado</h3>
+          <span class="tag media">Media</span><span class="tag hoja">SCRIPT CARPETAS</span></div>
+        <div class="now">Existe una hoja cuyo único fin es recordar «dónde está el script de carpetas automáticas»,
+          pero está vacía. Ese script es una pieza clave (crea la estructura de PDFs por patente) y depende de una sola persona.</div>
+        <div class="fix"><b>Solución.</b> Documentar qué hace el script, dónde vive, qué disparador lo ejecuta y cómo recuperarlo. Guardar una copia del código versionada.</div>
+      </article>
+
+      <article class="card sev-media">
+        <div class="card-head"><span class="card-id">A4</span>
+          <h3>Encabezados con símbolos raros: «¿¿MONTO??», «u», «GT»</h3>
+          <span class="tag media">Media</span><span class="tag hoja">Depósitos</span></div>
+        <div class="now">Columnas con nombres como <code>¿¿MONTO??</code> o <code>u</code> dificultan fórmulas y lectura, y sugieren campos improvisados.</div>
+        <div class="fix"><b>Solución.</b> Renombrar a etiquetas claras (<code>MONTO</code>, <code>GUÍA DE TRANSPORTE</code>, etc.).</div>
+      </article>
+
+      <article class="card sev-baja">
+        <div class="card-head"><span class="card-id">A5</span>
+          <h3>AGRO_COMERCIAL_PRO no pertenece al sistema de flota</h3>
+          <span class="tag baja">Mejora</span><span class="tag hoja">AGRO_COMERCIAL</span></div>
+        <div class="now">Es un módulo de inventario/ventas/compras de un negocio distinto (productos, proveedores, mermas), guardado en la misma carpeta que la documentación de flota.</div>
+        <div class="fix"><b>Solución.</b> Moverlo a su propio Drive/carpeta para no mezclar dominios ni inflar el sistema de flota.</div>
+      </article>
+
+    </div>
+    <a class="backlink" href="index.html">← Volver al inicio</a>
+  </section>
+
+</main>
+
+<footer><div class="wrap">
+  <span>Administración · compras, depósitos, script de carpetas y dominios ajenos.</span>
+  <span id="fecha"></span>
+</div></footer>
+<script>document.getElementById('fecha').textContent='Actualizado: '+new Date().toLocaleDateString('es-CL',{year:'numeric',month:'long',day:'numeric'});</script>
+</body>
+</html>
